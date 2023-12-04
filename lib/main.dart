@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dialog/inputdialog_todo.dart';
 
 // TODOアプリ
 // TODOの追加・削除・チェックの付け外しが出来る
@@ -59,6 +60,19 @@ class _MyHomePageState extends State<MyHomePage> {
               TodoTile(id:'9'),
             ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final String? inputText = await showDialog<String>(
+            context: context,
+            builder: (_) {
+              return InputDialogTodo();
+            }
+          );
+          print(inputText);
+        },
+        tooltip: 'Add Todo',
+        child: const Icon(Icons.add),
       ),
     );
   }
