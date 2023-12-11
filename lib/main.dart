@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'dialog/inputdialog_todo.dart';
 
 // TODOアプリ
@@ -34,7 +35,22 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+class stTodo {
+  String id = '';
+  String taskName = '';
+  bool isCheck=false;
+
+  stTodo({required String id, required String taskName, required bool isCheck}){
+    this.id = id;
+    this.taskName = taskName;
+    this.isCheck = isCheck;
+  }
+}
+
 class _MyHomePageState extends State<MyHomePage> {
+  // Todoリストのデータ
+  List<stTodo> todoList = <stTodo>[];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,18 +63,19 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children:
-            <Widget>[
-              TodoTile(id:'0'),
-              TodoTile(id:'1'),
-              TodoTile(id:'2'),
-              TodoTile(id:'3'),
-              TodoTile(id:'4'),
-              TodoTile(id:'5'),
-              TodoTile(id:'6'),
-              TodoTile(id:'7'),
-              TodoTile(id:'8'),
-              TodoTile(id:'9'),
-            ],
+              [
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: todoList.length,
+                  itemBuilder: (BuildContext context, index) {
+                    return TodoTile(
+                      id: todoList[index].id,
+                      taskName: todoList[index].taskName,
+                      isCheck: todoList[index].isCheck,
+                    );
+                  }
+                ),
+              ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -69,7 +86,17 @@ class _MyHomePageState extends State<MyHomePage> {
               return InputDialogTodo();
             }
           );
-          print(inputText);
+          // print(inputText);
+
+          var uuid = Uuid();
+          stTodo task = stTodo(
+              id: uuid.v4(),
+              taskName:inputText.toString(),
+              isCheck:false);
+          todoList.add(task);
+          setState(() {
+
+          });
         },
         tooltip: 'Add Todo',
         child: const Icon(Icons.add),
@@ -80,17 +107,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class TodoTile extends StatefulWidget {
   TodoTile({
-    Key? key,required this.id
+    Key? key,required this.id, required this.taskName, required this.isCheck
   }) : super(key: key);
 
   String id;
+  String taskName;
+  bool isCheck;
 
   @override
   _TodoTileState createState() => _TodoTileState();
 }
 
 class _TodoTileState extends State<TodoTile> {
-  bool isCheck = false;
   @override
   Widget build(BuildContext context) {
     return Dismissible(
@@ -101,10 +129,10 @@ class _TodoTileState extends State<TodoTile> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Checkbox(
-                value: isCheck,
+                value: widget.isCheck,
                 onChanged: (bool? state){
                   setState(() {
-                      isCheck = state ?? false;
+                      widget.isCheck = state ?? false;
                   });
                 }
             ),
@@ -123,10 +151,10 @@ class _TodoTileState extends State<TodoTile> {
                         )
                     )
                   ),
-                  child: const Text('TodoTile'),
+                  child: Text(widget.taskName),
                   onPressed: () {
                     setState(() {
-                      isCheck = !isCheck;
+                      widget.isCheck = !widget.isCheck;
                     });
                   },
                 ),
