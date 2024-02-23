@@ -21,14 +21,16 @@ class stTodo {
 // しかも、アプリを閉じても状態を保存出来る
 void main() {
   runApp(
-    const ProviderScope(
+    ProviderScope(
       child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  List<stTodo> todoList = [];
 
   // This widget is the root of your application.
   @override
@@ -39,23 +41,24 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: MyHomePage(title: 'Todo App'),
+      home: MyHomePage(title: 'Todo App', todoList: todoList),
     );
   }
 }
 
 class MyHomePage extends ConsumerStatefulWidget  {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key, required this.title, required this.todoList});
 
   final String title;
+
+  // Todoリストのデータ
+  final List<stTodo> todoList;
 
   @override
   ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-  // Todoリストのデータ
-  List<stTodo> todoList = <stTodo>[];
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +75,18 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               [
                 ListView.builder(
                   shrinkWrap: true,
-                  itemCount: todoList.length,
+                  itemCount: widget.todoList.length,
                   itemBuilder: (BuildContext context, index) {
                     return TodoTile(
-                      id: todoList[index].id,
-                      taskName: todoList[index].taskName,
-                      isCheck: todoList[index].isCheck,
+                      id: widget.todoList[index].id,
+                      taskName: widget.todoList[index].taskName,
+                      isCheck: widget.todoList[index].isCheck,
+                      onDismissed: (direction) {
+                        setState(() {
+                          widget.todoList.removeAt(index);
+                          print('remove todo index:${index.toString()}');
+                        });
+                      },
                     );
                   }
                 ),
@@ -94,12 +103,20 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           );
           // print(inputText);
 
+          if(inputText==null){
+            print("Input Todo's Text is Null!");
+            return;
+          }else if(inputText.isEmpty){
+            print("Input Todo's Text is Empty!");
+            return;
+          }
+
           var uuid = Uuid();
           stTodo task = stTodo(
               id: uuid.v4(),
               taskName:inputText.toString(),
               isCheck:false);
-          todoList.add(task);
+          widget.todoList.add(task);
           setState(() {
 
           });
@@ -113,12 +130,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
 class TodoTile extends StatefulWidget {
   TodoTile({
-    Key? key,required this.id, required this.taskName, required this.isCheck
+    Key? key,required this.id, required this.taskName, required this.isCheck,
+    required this.onDismissed
   }) : super(key: key);
 
   String id;
   String taskName;
   bool isCheck;
+  final DismissDirectionCallback onDismissed;
 
   @override
   _TodoTileState createState() => _TodoTileState();
@@ -129,6 +148,7 @@ class _TodoTileState extends State<TodoTile> {
   Widget build(BuildContext context) {
     return Dismissible(
       key: Key(widget.id),
+      onDismissed: (direction) => widget.onDismissed(direction),
       child: Padding(
         padding:const EdgeInsets.all(8.0),
         child: Row(
