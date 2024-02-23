@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'dialog/inputdialog_todo.dart';
+
+class stTodo {
+  String id = '';
+  String taskName = '';
+  bool isCheck=false;
+
+  stTodo({required String id, required String taskName, required bool isCheck}){
+    this.id = id;
+    this.taskName = taskName;
+    this.isCheck = isCheck;
+  }
+}
 
 // TODOアプリ
 // TODOの追加・削除・チェックの付け外しが出来る
 // しかも、アプリを閉じても状態を保存出来る
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,33 +39,21 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Todo App'),
+      home: MyHomePage(title: 'Todo App'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends ConsumerStatefulWidget  {
   const MyHomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  ConsumerState<MyHomePage> createState() => _MyHomePageState();
 }
 
-class stTodo {
-  String id = '';
-  String taskName = '';
-  bool isCheck=false;
-
-  stTodo({required String id, required String taskName, required bool isCheck}){
-    this.id = id;
-    this.taskName = taskName;
-    this.isCheck = isCheck;
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage> {
   // Todoリストのデータ
   List<stTodo> todoList = <stTodo>[];
 
