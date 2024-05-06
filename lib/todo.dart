@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'dialog/editdialog_todo.dart';
+
 class stTodo {
   String id = '';
   String taskName = '';
@@ -44,27 +46,54 @@ class _TodoTileState extends State<TodoTile> {
                     }
                 ),
                 Expanded(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: const RoundedRectangleBorder(
-                            // borderRadius: BorderRadius.circular(10)
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(0),
-                                bottomLeft: Radius.circular(0),
-                                topRight: Radius.circular(10),
-                                bottomRight: Radius.circular(10),
-                              )
-                          )
+                  child: GestureDetector(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: const RoundedRectangleBorder(
+                              // borderRadius: BorderRadius.circular(10)
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(0),
+                                  bottomLeft: Radius.circular(0),
+                                  topRight: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
+                                )
+                            )
+                        ),
+                        child: Text(widget.todo.taskName),
+                        onPressed: () {
+                          setState(() {
+                            widget.todo.isCheck = !widget.todo.isCheck;
+                          });
+                        },
                       ),
-                      child: Text(widget.todo.taskName),
-                      onPressed: () {
-                        setState(() {
-                          widget.todo.isCheck = !widget.todo.isCheck;
-                        });
-                      },
                     ),
+                    onLongPress : () async{
+                      final String? inputText = await showDialog<String>(
+                          context: context,
+                          builder: (_) {
+                            return EditDialogTodo();
+                          }
+                      );
+                      // print(inputText);
+
+                      if(inputText==null){
+                        print("Input Todo's Text is Null!");
+                        return;
+                      }else if(inputText.isEmpty){
+                        print("Input Todo's Text is Empty!");
+                        return;
+                      }
+
+                      widget.todo.taskName = inputText; // 自動で親ウィジェットのTodo配列の内容も変わる(Todoが参照で渡されている？)
+                      setState(() {
+
+                      });
+                    },
+                    onLongPressEnd : (detail){
+
+                    },
                   ),
                 ),
               ]
