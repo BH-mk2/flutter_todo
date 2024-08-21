@@ -49,8 +49,8 @@ android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
 android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 
 # ios
-/ios/Runner.xcodeproj/project.pbxproj
-/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-*.png
+ios/Runner.xcodeproj/project.pbxproj
+ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-*.png
 
 # Other
 pubspec.lock
