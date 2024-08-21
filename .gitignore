@@ -52,6 +52,9 @@ android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 ios/Runner.xcodeproj/project.pbxproj
 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-*.png
 
+# google
+**/google-services.json
+
 # Other
 pubspec.lock
 /assets/
