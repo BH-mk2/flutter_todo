@@ -58,3 +58,6 @@ ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-*.png
 # Other
 pubspec.lock
 /assets/
+
+# FVM Version Cache
+.fvm/

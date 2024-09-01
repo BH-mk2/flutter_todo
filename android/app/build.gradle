@@ -32,7 +32,7 @@ if(keystorePropertiesFile.exists()){
 }
 
 // need specifying flutter.minSdkVersion for flutter_launcher_icons:main
-flutter.minSdkVersion = 16
+// flutter.minSdkVersion = 16
 
 android {
     namespace "com.example.test_app"
